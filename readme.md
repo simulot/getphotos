@@ -1,4 +1,4 @@
-This module aims to download photos from your smartphone into you photo library in folders based on photo's time.
+This module aims to download photos from your smartphone into your photo library in folders based on photo's time.
 
 It uses the `gio` command for accessing to attached devices and perform file operations. (see `man gio`)
 
