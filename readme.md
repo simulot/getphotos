@@ -9,7 +9,7 @@ Usage of getphotos:
   -exclude value
         exclude files containing the string. Can be repeated (default .trashed,screenshoot)
   -library value
-        photo libray path (default /home/jfcassan/Pictures)
+        photo libray path (default /home/user/Pictures)
   -move
         move files
   -subfolder value
