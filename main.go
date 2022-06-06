@@ -15,8 +15,8 @@ import (
 	"time"
 
 	"github.com/rwcarlsen/goexif/exif"
+	"github.com/simulot/getphotos/giofs"
 	"github.com/simulot/lib/myflag"
-	"github.com/simulot/toolbox/giofs"
 )
 
 type App struct {
