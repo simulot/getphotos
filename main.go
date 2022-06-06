@@ -37,11 +37,11 @@ func main() {
 	}
 	app.LibrarySubFolder.Set("Photos/%Y/%Y.%m/%Y.%m.%d")
 
-	flag.Var(&app.DeviceMount, "device", "device mount point. leave empty to search all devices mounted")
-	flag.Var(&app.Library, "library", "photo libray path")
-	flag.Var(&app.LibrarySubFolder, "subfolder", "Photo destination sub folder based on exposure date, accept %Y,%m,%d for year month day, %H,%M,%S for hours minutes secondes")
-	flag.Var(&app.ExcludeList, "exclude", "exclude files containing the string. Can be repeated")
-	flag.BoolVar(&app.Move, "move", false, "move files")
+	flag.Var(&app.DeviceMount, "device", "device mount point. Leave empty to search all devices mounted.")
+	flag.Var(&app.Library, "library", "photo libray path.")
+	flag.Var(&app.LibrarySubFolder, "subfolder", "Photo destination sub folder based on exposure date, accepts %Y,%m,%d for year month day, %H,%M,%S for hours minutes secondes")
+	flag.Var(&app.ExcludeList, "exclude", "Exclude files containing the string. Can be repeated for several strings.")
+	flag.BoolVar(&app.Move, "move", false, "Move files instead of copy them.")
 	err := app.Run(ctx)
 	if err != nil {
 		fmt.Println(err)
