@@ -16,6 +16,7 @@ import (
 
 	"github.com/rwcarlsen/goexif/exif"
 	"github.com/simulot/lib/myflag"
+	"github.com/simulot/toolbox/giofs"
 )
 
 type App struct {
@@ -52,38 +53,64 @@ func (app *App) Run(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+
 	if app.DeviceMount != "" {
 		err = app.ProcessVolume(ctx,
-			PhotoDevice{
-				Name: app.DeviceMount.String(),
-				Path: app.DeviceMount.String(),
+			giofs.MountInfo{
+				DeviceName: app.DeviceMount.String(),
+				URI:        "file://" + app.DeviceMount.String(),
+				Protocole:  "file",
 			})
 		if err != nil {
 			fmt.Println(err)
 		}
 
 	} else {
-		devs, err := SearchDCIM(ctx)
+		mounts, err := giofs.MountList()
 		if err != nil {
-			return err
+			return fmt.Errorf("can't get media device list: %w", err)
 		}
-		for _, dev := range devs {
-			err = app.ProcessVolume(ctx, dev)
-			if err != nil {
-				fmt.Println(err)
+		if len(mounts) == 0 {
+			fmt.Println("No media device found")
+			return nil
+		}
+		for _, m := range mounts {
+			switch m.Protocole {
+			case "mtp", "file", "gphoto2":
+				err = app.ProcessVolume(ctx, m)
+				if err != nil {
+					fmt.Println(err)
+				}
 			}
 		}
 	}
 	return nil
 }
 
-func (app *App) ProcessVolume(ctx context.Context, dev PhotoDevice) error {
-	done := PleaseWait("Exploring " + dev.Name)
+func (app *App) ProcessVolume(ctx context.Context, m giofs.MountInfo) error {
+	done := PleaseWait("Exploring " + m.DeviceName)
 	defer done()
-	fsys := RemoveDirFS(dev.Path)
 
-	return fs.WalkDir(fsys, ".", func(path string, info fs.DirEntry, err error) error {
+	fsys := giofs.GIOFS(m.URI)
+
+	p := "."
+	switch m.Protocole {
+	case "gphoto2", "mtp":
+		pp, err := fs.Glob(fsys, "*/DCIM")
+		if err != nil {
+			return err
+		}
+		if len(pp) == 0 {
+			return nil
+		}
+		p = pp[0]
+	}
+
+	return fs.WalkDir(fsys, p, func(path string, info fs.DirEntry, err error) error {
 		done()
+		if err != nil {
+			return err
+		}
 		if info.IsDir() {
 			return nil
 		}
