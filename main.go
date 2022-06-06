@@ -95,7 +95,9 @@ func (app *App) ProcessVolume(ctx context.Context, m giofs.MountInfo) error {
 
 	p := "."
 	switch m.Protocole {
-	case "gphoto2", "mtp":
+	case "gphoto2":
+		p = "./DCIM"
+	case "mtp":
 		pp, err := fs.Glob(fsys, "*/DCIM")
 		if err != nil {
 			return err
