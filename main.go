@@ -30,12 +30,13 @@ type App struct {
 func main() {
 	ctx := context.Background()
 	PictureDirectory, _ := GetXDGDirectory("XDG_PICTURES_DIR")
+	PictureDirectory = filepath.Join(PictureDirectory, "Photos")
 
 	app := App{
 		Library:     myflag.DirName(PictureDirectory),
 		ExcludeList: []string{".trashed", "screenshoot"},
 	}
-	app.LibrarySubFolder.Set("Photos/%Y/%Y.%m/%Y.%m.%d")
+	app.LibrarySubFolder.Set("%Y/%Y.%m/%Y.%m.%d")
 
 	flag.Var(&app.DeviceMount, "device", "device mount point. Leave empty to search all devices mounted.")
 	flag.Var(&app.Library, "library", "photo libray path.")
