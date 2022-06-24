@@ -1,6 +1,8 @@
 package giofs
 
 import (
+	"bytes"
+	"errors"
 	"net/url"
 	"os/exec"
 	"regexp"
@@ -76,6 +78,13 @@ func gio(cmd string, args ...string) (out []byte, err error) {
 		return
 	}
 	args = append([]string{cmd}, args...)
-	out, err = exec.Command("gio", args...).Output()
-	return
+	c := exec.Command("gio", args...)
+	bOutput, bError := bytes.Buffer{}, bytes.Buffer{}
+	c.Stdout = &bOutput
+	c.Stderr = &bError
+	err = c.Run()
+	if err != nil {
+		return bOutput.Bytes(), errors.New(strings.TrimSpace(bError.String()))
+	}
+	return bOutput.Bytes(), nil
 }

@@ -6,7 +6,7 @@ import "fmt"
 func (fsys FS) Remove(name string) error {
 	_, err := gio("remove", fsys.uri+name)
 	if err != nil {
-		return fmt.Errorf("remove: %s", err)
+		return fmt.Errorf("remove: %w", err)
 	}
 	return nil
 }

@@ -62,7 +62,7 @@ func (app *App) Run(ctx context.Context) error {
 				Protocole:  "file",
 			})
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 	} else {
@@ -79,7 +79,7 @@ func (app *App) Run(ctx context.Context) error {
 			case "mtp", "file", "gphoto2":
 				err = app.ProcessVolume(ctx, m)
 				if err != nil {
-					fmt.Println(err)
+					return err
 				}
 			}
 		}
