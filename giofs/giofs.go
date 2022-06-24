@@ -1,6 +1,9 @@
 package giofs
 
-import "context"
+import (
+	"context"
+	"strings"
+)
 
 /*
   Some documentation about gio command:
@@ -22,6 +25,9 @@ func GIOFS(name string) *FS {
 
 // GIOFS create a fs.FS implementation using gio command on a linux system and pass the given context
 func GIOFSWithContext(ctx context.Context, name string) *FS {
+	if !strings.HasSuffix(name, "/") {
+		name += "/"
+	}
 	return &FS{
 		ctx: ctx,
 		uri: name,
